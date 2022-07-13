@@ -8,7 +8,7 @@ library(tidyRSS)
 library(waiter)
 
 ui <- fluidPage(
-  
+  title = 'R Lately',
   # custom style sheet
   theme = 'style.css',
   
