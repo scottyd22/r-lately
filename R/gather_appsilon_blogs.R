@@ -89,7 +89,7 @@ gather_appsilon_blogs = function(days) {
           filter(row_number() %% 3 == 0) |>
           mutate(image = paste0('https://appsilon.com', image))
         
-      ) |>
+        ) |>
       mutate(blog = 'appsilon blog') |>
       select(date, blog, author, everything())
     
@@ -102,4 +102,4 @@ gather_appsilon_blogs = function(days) {
   
   blogs |> arrange(desc(date))
   
-  }
+}
