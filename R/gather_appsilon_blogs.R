@@ -81,14 +81,13 @@ gather_appsilon_blogs = function(days) {
           mutate(summary = str_replace(summary, '\n', '')),
         
         # image link
-        read_html(site) |>
-          html_nodes('.gatsby-image-wrapper-constrained img') |>
-          html_attr('src') |>
+        read_html(site) |> 
+          html_nodes('.BlogArchive-module--article--LBkYy .ArticleThumbnail-module--thumbnail--21F8t img , .ArticleThumbnail-module--xlarge--atty2 .ArticleThumbnail-module--thumbnail--21F8t img') |> 
+          html_attr('src') |> 
           as.data.frame() |>
-          rename_at(1, ~paste0('image')) |>
-          filter(str_detect(image, '.png')) |>
-          mutate(image = paste0('https://appsilon.com', image)) |>
-          filter(str_detect(image, 'Blog-Hero'))
+          rename_at(1, ~paste0('image')) |> 
+          filter(row_number() %% 3 == 0) |>
+          mutate(image = paste0('https://appsilon.com', image))
         
       ) |>
       mutate(blog = 'appsilon blog') |>
