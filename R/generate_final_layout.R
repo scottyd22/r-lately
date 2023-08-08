@@ -5,30 +5,30 @@ generate_final_layout = function() {
     # header
     fluidRow(uiOutput('header')),
     
-    # rstudio row
+    # posit row
     fluidRow(style = 'margin-top: 100px;',
-             # rstudio detail
+             # posit detail
              column(5,
                     style = 'background-color: #FFFFFF; color: #040F61; height: 500px;',
                     class = 'bigDescriptions',
-                    uiOutput('rstudio_description')
+                    uiOutput('posit_description')
              ),
-             
-             # rstudio carousel
+
+             # posit carousel
              column(7, style = 'padding-top: 20px;',
                     HTML('<center>'),
-                    tags$div(uiOutput('rstudio_prev', class = 'inline'),
-                             uiOutput('rstudio_cards', class = 'inline'),
-                             uiOutput('rstudio_next', class = 'inline'),
-                             uiOutput('rstudio_circles')
+                    tags$div(uiOutput('posit_prev', class = 'inline'),
+                             uiOutput('posit_cards', class = 'inline'),
+                             uiOutput('posit_next', class = 'inline'),
+                             uiOutput('posit_circles')
                     ),
                     HTML('</center>')
              )
     ),
-    
+
     br(),
     br(),
-    
+
     # ropensci row
     fluidRow(
       # ropensci detail
@@ -37,7 +37,7 @@ generate_final_layout = function() {
              class = 'bigDescriptions',
              uiOutput('ropensci_description')
       ),
-      
+
       # ropensci carousel
       column(7, style = 'padding-top: 20px; background-color: whitesmoke; color: #040F61; height: 500px;',
              HTML('<center>'),
@@ -49,10 +49,10 @@ generate_final_layout = function() {
              HTML('</center>')
       )
     ),
-    
+
     br(),
     br(),
-    
+
     # appsilon row
     fluidRow(
       # appsilon detail
@@ -61,7 +61,7 @@ generate_final_layout = function() {
              class = 'bigDescriptions',
              uiOutput('appsilon_description')
       ),
-      
+
       # appsilon carousel
       column(7, style = 'padding-top: 20px; background-color: #FFFFFF; color: #040F61; height: 500px;',
              HTML('<center>'),
@@ -73,12 +73,12 @@ generate_final_layout = function() {
              HTML('</center>')
       )
     ),
-    
-    br(),
-    br(),
+    # 
+    # br(),
+    # br(),
     
     # cran row
-    fluidRow(
+    fluidRow(style = 'margin-top: 100px;',
       # cran detail
       column(5,
              style = 'padding-top: 20px; background-color: whitesmoke; color: #FFFFFF; height: 500px;',

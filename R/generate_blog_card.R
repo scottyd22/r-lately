@@ -6,12 +6,12 @@ generate_blog_card = function(i, blogs) {
   df$blog_name = deparse(substitute(blogs))
   
   # add Logos if no image is available
-  if(is.na(df$image) & str_detect(df$blog_name, 'rstudio')) {df$image = 'rstudio_logo.PNG'}
+  if(is.na(df$image) & str_detect(df$blog_name, 'rstudio|posit')) {df$image = 'posit_logo.PNG'}
   if(is.na(df$image) & str_detect(df$blog_name, 'ropensci')) {df$image = 'ropensci_logo.PNG'}
   if(is.na(df$image) & str_detect(df$blog_name, 'appsilon')) {df$image = 'appsilon_logo.PNG'}
   
   # add 'by' if an author exists
-  if(!is.na(df$author) & !df$author %in% c('', '')) {df$author = paste0('by ', df$author)}
+  if(!is.na(df$author) & !df$author %in% c('', '')) {df$author = paste0('by ', df$author)} else (df$author = '')
   
   # truncate summary if too long (more than 50 words)
   if(str_count(df$summary, '\\w+') > 50) {df$summary = paste0(word(df$summary, 1, 50), ' ...')}
