@@ -6,10 +6,10 @@ gather_appsilon_blogs = function(days) {
     
     site = 'https://appsilon.com/blog/'
     
-    blog = left_join(
+    blog_data = left_join(
       # blog titles
       read_html(site) |>
-        html_nodes('a:nth-child(2) .ArticleThumbnail-module--title--j9lsg') |>
+        html_nodes('.ArticleThumbnail-module--title--j9lsg') |>
         xml2::as_list() |>
         unlist() |>
         as.data.frame() |>
@@ -64,32 +64,49 @@ gather_appsilon_blogs = function(days) {
           mutate(date = paste0(year, '-', month, '-', day)) |>
           select(date)
         
-        )
-      ) |>
-      
-      # bind on summary and image
-      bind_cols(
-        
-        # summary
-        read_html(site) |>
-          html_nodes('.ArticleThumbnail-module--excerpt--cUknh') |>
-          xml2::as_list() |>
-          unlist() |>
-          as.data.frame() |>
-          rename_at(1, ~paste('summary')) |>
-          mutate(summary = str_squish(summary)) |>
-          mutate(summary = str_replace(summary, '\n', '')),
-        
-        # image link
-        read_html(site) |> 
-          html_nodes('.BlogArchive-module--article--LBkYy .ArticleThumbnail-module--thumbnail--21F8t img , .ArticleThumbnail-module--xlarge--atty2 .ArticleThumbnail-module--thumbnail--21F8t img') |> 
-          html_attr('src') |> 
-          as.data.frame() |>
-          rename_at(1, ~paste0('image')) |> 
-          filter(row_number() %% 3 == 0) |>
-          mutate(image = paste0('https://appsilon.com', image))
-        
-        ) |>
+      )
+    ) 
+    # summary
+    blog_summary = read_html(site) |>
+      html_nodes('.ArticleThumbnail-module--excerpt--cUknh , .ArticleThumbnail-module--title--j9lsg') |>
+      xml2::as_list() |>
+      unlist() |>
+      as.data.frame() |>
+      rename_at(1, ~paste('title')) |>
+      mutate(title = str_squish(title)) |>
+      mutate(title = str_replace(title, '\n', ''))
+    
+    blog_summary = blog_summary |>
+      mutate(check = ifelse(title %in% blog_data$title, 1, 0)) |>
+      mutate(summary = case_when(
+        row_number() == 1L ~ lead(title),
+        check == 1 & lead(check) == 1 ~ ' ',
+        check == 1 ~ lead(title)
+      )) |>
+      filter(check == 1) |>
+      select(-check)
+    
+    
+    # image link
+    blog_image = read_html(site) |> 
+      html_nodes('.BlogArchive-module--article--LBkYy .ArticleThumbnail-module--thumbnail--21F8t img , .ArticleThumbnail-module--xlarge--atty2 .ArticleThumbnail-module--thumbnail--21F8t img') |>
+      html_attr('src') |>
+      as.data.frame() |>
+      rename_at(1, ~paste0('image')) |> 
+      filter(row_number() %% 3 == 0) |>
+      mutate(image = paste0('https://appsilon.com', image))
+    
+    
+    # combine
+    blogs = left_join(blog_data, blog_summary)
+    
+    if(nrow(blog_image) == nrow(blog_summary)) {
+      blogs = left_join(blogs, blog_image)
+    } else {
+      blogs = blogs |> mutate(image = NA)
+    }
+    
+    blogs |>
       mutate(blog = 'appsilon blog') |>
       select(date, blog, author, everything())
     

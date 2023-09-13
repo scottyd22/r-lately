@@ -5,85 +5,85 @@ gather_rstudio_blogs = function(days) {
   gather_blogs = function() {
     
     # RStudio Blog ----
-    site = 'https://blog.rstudio.com'
-    
-    rstudio_blog = bind_cols(
-      # blog titles
-      read_html(site) |>
-        html_nodes('.cards h5, .h4') |>
-        xml2::as_list() |>
-        unlist() |>
-        as.data.frame() |>
-        rename_at(1, ~paste('title')) |>
-        mutate(title = str_squish(title)),
-      
-      # blog links
-      read_html(site) |>
-        html_nodes('.cards a, .card-blog a') |>
-        html_attrs() |>
-        unlist() |>
-        as.data.frame() |>
-        rename_at(1, ~paste('link')),
-      
-      # summary
-      read_html(site) |>
-        html_nodes('.cards p, .card-description') |>
-        html_text() |>
-        as.data.frame() |>
-        rename_at(1, ~paste('summary')) |>
-        mutate(summary = str_squish(summary)) |>
-        mutate(summary = str_replace(summary, '\n', '')) |>
-        mutate(summary = str_replace(summary, ' Read more ', '')) |>
-        filter(summary != '' & summary != 'Latest'),
-      
-      # date
-      read_html(site) |>
-        html_nodes('.card-meta div:nth-child(1)') |>
-        xml2::as_list() |>
-        unlist() |>
-        as.data.frame() |>
-        rename_at(1, ~paste('date')) |>
-        mutate(date = str_squish(date)) |>
-        # translate to date format
-        mutate(month_abb = substr(date,1,3)) |>
-        left_join(
-          tibble(month_abb = month.abb,
-                 month = seq(1,12,1))
-        ) |>
-        mutate(month = ifelse(nchar(month) == 1, paste0('0', month), month)) |>
-        mutate(day = str_squish(substr(date, nchar(date) - 1, nchar(date))),
-               day = ifelse(nchar(day) == 1, paste0('0', day), day)
-        ) |>
-        # if today is Jan - Mar and month scraped is Sep or later, set to prior year; else take current year
-        mutate(year = ifelse(month(today()) %in% c(1,2,3) & as.numeric(month) >= 9, 
-                             year(today()) - 1, 
-                             year(today())
-        )
-        ) |>
-        mutate(date = paste0(year, '-', month, '-', day)) |>
-        select(date),
-      
-      # author
-      read_html(site) |>
-        html_nodes('.cards h6, .pt-3 .text-prim') |>
-        xml2::as_list() |>
-        unlist() |>
-        as.data.frame() |>
-        rename_at(1, ~paste('author')) |>
-        mutate(author = str_squish(author)),
-      
-      # image link
-      read_html(site) |>
-        html_nodes('.card-image img, .cards img') |>
-        html_attrs() |>
-        unlist() |>
-        data.frame() |>
-        rename_at(1, ~paste0('image')) |>
-        filter(row_number() %% 3 == 2L)
-      
-    ) |>
-      mutate(blog = 'rstudio blog') |>
-      select(date, blog, author, everything())
+    # site = 'https://blog.rstudio.com'
+    # 
+    # rstudio_blog = bind_cols(
+    #   # blog titles
+    #   read_html(site) |>
+    #     html_nodes('.cards h5, .h4') |>
+    #     xml2::as_list() |>
+    #     unlist() |>
+    #     as.data.frame() |>
+    #     rename_at(1, ~paste('title')) |>
+    #     mutate(title = str_squish(title)),
+    #   
+    #   # blog links
+    #   read_html(site) |>
+    #     html_nodes('.cards a, .card-blog a') |>
+    #     html_attrs() |>
+    #     unlist() |>
+    #     as.data.frame() |>
+    #     rename_at(1, ~paste('link')),
+    #   
+    #   # summary
+    #   read_html(site) |>
+    #     html_nodes('.cards p, .card-description') |>
+    #     html_text() |>
+    #     as.data.frame() |>
+    #     rename_at(1, ~paste('summary')) |>
+    #     mutate(summary = str_squish(summary)) |>
+    #     mutate(summary = str_replace(summary, '\n', '')) |>
+    #     mutate(summary = str_replace(summary, ' Read more ', '')) |>
+    #     filter(summary != '' & summary != 'Latest'),
+    #   
+    #   # date
+    #   read_html(site) |>
+    #     html_nodes('.card-meta div:nth-child(1)') |>
+    #     xml2::as_list() |>
+    #     unlist() |>
+    #     as.data.frame() |>
+    #     rename_at(1, ~paste('date')) |>
+    #     mutate(date = str_squish(date)) |>
+    #     # translate to date format
+    #     mutate(month_abb = substr(date,1,3)) |>
+    #     left_join(
+    #       tibble(month_abb = month.abb,
+    #              month = seq(1,12,1))
+    #     ) |>
+    #     mutate(month = ifelse(nchar(month) == 1, paste0('0', month), month)) |>
+    #     mutate(day = str_squish(substr(date, nchar(date) - 1, nchar(date))),
+    #            day = ifelse(nchar(day) == 1, paste0('0', day), day)
+    #     ) |>
+    #     # if today is Jan - Mar and month scraped is Sep or later, set to prior year; else take current year
+    #     mutate(year = ifelse(month(today()) %in% c(1,2,3) & as.numeric(month) >= 9, 
+    #                          year(today()) - 1, 
+    #                          year(today())
+    #     )
+    #     ) |>
+    #     mutate(date = paste0(year, '-', month, '-', day)) |>
+    #     select(date),
+    #   
+    #   # author
+    #   read_html(site) |>
+    #     html_nodes('.cards h6, .pt-3 .text-prim') |>
+    #     xml2::as_list() |>
+    #     unlist() |>
+    #     as.data.frame() |>
+    #     rename_at(1, ~paste('author')) |>
+    #     mutate(author = str_squish(author)),
+    #   
+    #   # image link
+    #   read_html(site) |>
+    #     html_nodes('.card-image img, .cards img') |>
+    #     html_attrs() |>
+    #     unlist() |>
+    #     data.frame() |>
+    #     rename_at(1, ~paste0('image')) |>
+    #     filter(row_number() %% 3 == 2L)
+    #   
+    # ) |>
+    #   mutate(blog = 'rstudio blog') |>
+    #   select(date, blog, author, everything())
     
     
     # RStudio R Views ----
@@ -192,7 +192,9 @@ gather_rstudio_blogs = function(days) {
       select(date, author, everything())
     
     # output
-    bind_rows(r_views, rstudio_blog, tidyverse_blog)
+    bind_rows(r_views, 
+              # rstudio_blog, 
+              tidyverse_blog)
     
   }
   
