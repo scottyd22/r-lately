@@ -52,7 +52,7 @@ server <- function(input, output, session) {
   # load data ----
   observe({
     posit$d = gather_posit_blogs(30)
-    ropensci$d = gather_ropensci_blogs2(30)
+    # ropensci$d = gather_ropensci_blogs2(30)
     appsilon$d = gather_appsilon_blogs(30)
     cran$d = gather_cran_data(6)
   })
@@ -181,69 +181,69 @@ server <- function(input, output, session) {
       ))
   })
   
-  # ropensci ----
-  ## ropensci data ----
-  ropensci = reactiveValues(d = NULL)
-
-  ## ropensci counter ----
-  ropensci_counter = reactiveVal(1)
-
-  ## ropensci prev,next buttons and actions ----
-  output$ropensci_prev = renderUI({
-    actionButton('ropensciPrev', label = NULL, icon = icon(name = 'arrow-left', lib = 'font-awesome'),
-                 class = 'button')
-  })
-
-  output$ropensci_next = renderUI({
-    actionButton('ropensciNext', label = NULL, icon = icon(name = 'arrow-right', lib = 'font-awesome'),
-                 class = 'button')
-  })
-
-  observeEvent(input$ropensciPrev,{
-    # if at the beginning, cycle to the last entry
-    if(ropensci_counter() == 1) {
-      ropensci_counter(nrow(ropensci$d))
-      # otherwise just decrement by 1
-    } else {
-      ropensci_counter(ropensci_counter() - 1)
-    }
-  })
-
-  observeEvent(input$ropensciNext,{
-    # if at the end, cycle to the first entry
-    if(ropensci_counter() == nrow(ropensci$d)) {
-      ropensci_counter(1)
-      # otherwise just increase by 1
-    } else {
-      ropensci_counter(ropensci_counter() + 1)
-    }
-  })
-
-  ## ropensci description ----
-  output$ropensci_description = renderUI({
-
-    HTML('<div style="margin-left: 40px; margin-right: 40px;">
-                <b>Explore what\'s new from rOpenSci!</b>
-                <br><br>
-                Blogs published in the last <b>30 days</b> are gathered from the
-                <i><a href="https://ropensci.org/blog/" target="_blank" style="color: #337ab7;">rOpenSci Blog &nbsp;<i class="fas fa-external-link-alt"></i></a></i>.
-                </div>')
-
-  })
-
-  ## ropensci cards ----
-  output$ropensci_cards = renderUI({
-    lapply(ropensci_counter(), generate_blog_card, blogs = ropensci$d)
-  })
-
-  ## ropensci circles ----
-  output$ropensci_circles = renderUI({
-    HTML(paste0(
-      '<div style="margin-top: 20px;">',
-      lapply(1:nrow(ropensci$d), generate_circles, counter = ropensci_counter()) |> paste(collapse = ' '),
-      '</div>'
-    ))
-  })
+  # # ropensci ----
+  # ## ropensci data ----
+  # ropensci = reactiveValues(d = NULL)
+  # 
+  # ## ropensci counter ----
+  # ropensci_counter = reactiveVal(1)
+  # 
+  # ## ropensci prev,next buttons and actions ----
+  # output$ropensci_prev = renderUI({
+  #   actionButton('ropensciPrev', label = NULL, icon = icon(name = 'arrow-left', lib = 'font-awesome'),
+  #                class = 'button')
+  # })
+  # 
+  # output$ropensci_next = renderUI({
+  #   actionButton('ropensciNext', label = NULL, icon = icon(name = 'arrow-right', lib = 'font-awesome'),
+  #                class = 'button')
+  # })
+  # 
+  # observeEvent(input$ropensciPrev,{
+  #   # if at the beginning, cycle to the last entry
+  #   if(ropensci_counter() == 1) {
+  #     ropensci_counter(nrow(ropensci$d))
+  #     # otherwise just decrement by 1
+  #   } else {
+  #     ropensci_counter(ropensci_counter() - 1)
+  #   }
+  # })
+  # 
+  # observeEvent(input$ropensciNext,{
+  #   # if at the end, cycle to the first entry
+  #   if(ropensci_counter() == nrow(ropensci$d)) {
+  #     ropensci_counter(1)
+  #     # otherwise just increase by 1
+  #   } else {
+  #     ropensci_counter(ropensci_counter() + 1)
+  #   }
+  # })
+  # 
+  # ## ropensci description ----
+  # output$ropensci_description = renderUI({
+  # 
+  #   HTML('<div style="margin-left: 40px; margin-right: 40px;">
+  #               <b>Explore what\'s new from rOpenSci!</b>
+  #               <br><br>
+  #               Blogs published in the last <b>30 days</b> are gathered from the
+  #               <i><a href="https://ropensci.org/blog/" target="_blank" style="color: #337ab7;">rOpenSci Blog &nbsp;<i class="fas fa-external-link-alt"></i></a></i>.
+  #               </div>')
+  # 
+  # })
+  # 
+  # ## ropensci cards ----
+  # output$ropensci_cards = renderUI({
+  #   lapply(ropensci_counter(), generate_blog_card, blogs = ropensci$d)
+  # })
+  # 
+  # ## ropensci circles ----
+  # output$ropensci_circles = renderUI({
+  #   HTML(paste0(
+  #     '<div style="margin-top: 20px;">',
+  #     lapply(1:nrow(ropensci$d), generate_circles, counter = ropensci_counter()) |> paste(collapse = ' '),
+  #     '</div>'
+  #   ))
+  # })
   
   # appsilon ----
   ## appsilon data ----

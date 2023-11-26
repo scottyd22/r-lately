@@ -9,13 +9,13 @@ generate_final_layout = function() {
     fluidRow(style = 'margin-top: 100px;',
              # posit detail
              column(5,
-                    style = 'background-color: #FFFFFF; color: #040F61; height: 500px;',
+                    style = 'background-color: whitesmoke; color: #040F61; height: 500px;',
                     class = 'bigDescriptions',
                     uiOutput('posit_description')
              ),
 
              # posit carousel
-             column(7, style = 'padding-top: 20px;',
+             column(7, style = 'padding-top: 20px; background-color: whitesmoke; color: #040F61; height: 500px;',
                     HTML('<center>'),
                     tags$div(uiOutput('posit_prev', class = 'inline'),
                              uiOutput('posit_cards', class = 'inline'),
@@ -29,29 +29,29 @@ generate_final_layout = function() {
     br(),
     br(),
 
-    # ropensci row
-    fluidRow(
-      # ropensci detail
-      column(5,
-             style = 'background-color: whitesmoke; color: #040F61; height: 500px;',
-             class = 'bigDescriptions',
-             uiOutput('ropensci_description')
-      ),
-
-      # ropensci carousel
-      column(7, style = 'padding-top: 20px; background-color: whitesmoke; color: #040F61; height: 500px;',
-             HTML('<center>'),
-             tags$div(uiOutput('ropensci_prev', class = 'inline'),
-                      uiOutput('ropensci_cards', class = 'inline'),
-                      uiOutput('ropensci_next', class = 'inline'),
-                      uiOutput('ropensci_circles')
-             ),
-             HTML('</center>')
-      )
-    ),
-
-    br(),
-    br(),
+    # # ropensci row
+    # fluidRow(
+    #   # ropensci detail
+    #   column(5,
+    #          style = 'background-color: whitesmoke; color: #040F61; height: 500px;',
+    #          class = 'bigDescriptions',
+    #          uiOutput('ropensci_description')
+    #   ),
+    # 
+    #   # ropensci carousel
+    #   column(7, style = 'padding-top: 20px; background-color: whitesmoke; color: #040F61; height: 500px;',
+    #          HTML('<center>'),
+    #          tags$div(uiOutput('ropensci_prev', class = 'inline'),
+    #                   uiOutput('ropensci_cards', class = 'inline'),
+    #                   uiOutput('ropensci_next', class = 'inline'),
+    #                   uiOutput('ropensci_circles')
+    #          ),
+    #          HTML('</center>')
+    #   )
+    # ),
+    # 
+    # br(),
+    # br(),
 
     # appsilon row
     fluidRow(
