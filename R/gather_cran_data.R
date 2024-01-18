@@ -42,14 +42,14 @@ gather_cran_data = function(days) {
     
     # split url on commas
     rowwise() %>%
-    mutate(comma = str_locate(url,',')) %>%
+    mutate(comma = str_locate(url,',')[1]) %>%
     mutate(url = ifelse(is.na(comma), url, substr(url,1,(comma - 1)))) %>%
     mutate(url = first(url)) %>%
     ungroup() %>%
     
     # split url on spaces
     rowwise() %>%
-    mutate(space = str_locate(url,' ')) %>%
+    mutate(space = str_locate(url,' ')[1]) %>%
     mutate(url = ifelse(is.na(space), url, substr(url,1,(space - 1)))) %>%
     mutate(url = first(url)) %>%
     ungroup() %>%
